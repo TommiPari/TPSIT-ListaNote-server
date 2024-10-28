@@ -9,9 +9,11 @@ import java.util.ArrayList;
 
 public class MyThread extends Thread {
     private Socket s;
+    private GlobalNotes gn;
     
-    public MyThread(Socket s) {
+    public MyThread(Socket s, GlobalNotes gn) {
         this.s = s;
+        this.gn = gn;
     }
 
     public void run() {
@@ -24,12 +26,20 @@ public class MyThread extends Thread {
                 receive = in.readLine();
                 switch (receive) {
                     case "?":
+                        for (String globalNote : gn.notes) {
+                            out.writeBytes(globalNote + "\n");
+                        } 
                         for (String note : notes) {
                             out.writeBytes(note + "\n");    
                         }
                         out.writeBytes("@\n");
                         break;
                     case "!":
+                        break;
+                    case "+":
+                        String note = in.readLine();  
+                        gn.add(note);
+                        out.writeBytes("OK" + "\n");
                         break;
                     default:
                         notes.add(receive);
