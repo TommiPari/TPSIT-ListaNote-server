@@ -51,6 +51,14 @@ public class MyThread extends Thread {
                         gn.add(note, username);
                         out.writeBytes("OK" + "\n");
                         break;
+                    case "-":
+                        String remove = in.readLine();
+                        if (notes.remove(remove)) {
+                            out.writeBytes("OK" + "\n");
+                        } else {
+                            out.writeBytes("NO" + "\n");
+                        }
+                        break;
                     default:
                         notes.add(receive);
                         out.writeBytes("OK" + "\n");
