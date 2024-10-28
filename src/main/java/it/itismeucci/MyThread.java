@@ -10,10 +10,12 @@ import java.util.ArrayList;
 public class MyThread extends Thread {
     private Socket s;
     private GlobalNotes gn;
+    private Users u;
     
-    public MyThread(Socket s, GlobalNotes gn) {
+    public MyThread(Socket s, GlobalNotes gn, Users u) {
         this.s = s;
         this.gn = gn;
+        this.u = u;
     }
 
     public void run() {
@@ -21,6 +23,13 @@ public class MyThread extends Thread {
             ArrayList<String> notes = new ArrayList<String>();
             BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             DataOutputStream out = new DataOutputStream(s.getOutputStream());
+            String result;
+            String username;
+            do {
+                username = in.readLine();
+                result = u.verify(username);
+                out.writeBytes(result + "\n");    
+            } while (result.equals("NO"));
             String receive;
             do {
                 receive = in.readLine();
@@ -35,10 +44,11 @@ public class MyThread extends Thread {
                         out.writeBytes("@\n");
                         break;
                     case "!":
+                        u.remove(in.readLine());
                         break;
                     case "+":
-                        String note = in.readLine();  
-                        gn.add(note);
+                        String note = in.readLine();
+                        gn.add(note, username);
                         out.writeBytes("OK" + "\n");
                         break;
                     default:

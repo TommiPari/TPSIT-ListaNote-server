@@ -9,7 +9,7 @@ public class GlobalNotes {
         this.notes = new ArrayList<String>();
     }
 
-    public void add(String note) {
-        this.notes.add(note);
+    synchronized public void add(String note, String username) {
+        this.notes.add(note + "=>" + username);
     }
 }
